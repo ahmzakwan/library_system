@@ -1,6 +1,9 @@
 from datetime import datetime
 
+#create book class
 class Book:
+
+    #book model
     def __init__(self, book_name, author, book_id, rental_date, due_date):
         self.book_name = book_name
         self.author = author
@@ -8,7 +11,9 @@ class Book:
         self.rental_date = rental_date
         self.due_date = due_date
 
+#create customer class
 class Customer:
+    #customer model
     def __init__(self, customer_id, name, address, contact_no):
         self.customer_id = customer_id
         self.name = name
@@ -17,9 +22,11 @@ class Customer:
         self.books = []
         self.penalty_amount = 0.0
 
+    #add book function
     def add_book(self, book):
         self.books.append(book)
 
+    #edit book function using book id
     def edit_book(self, book_id, new_book):
         for i, book in enumerate(self.books):
             if book.book_id == book_id:
@@ -27,6 +34,7 @@ class Customer:
                 return True
         return False
 
+    #penalty calculation
     def calculate_penalty(self, current_date):
         self.penalty_amount = 0.0
         for book in self.books:
@@ -41,33 +49,36 @@ class Customer:
                 elif overdue_days > 30:
                     self.penalty_amount += (7 - 5) * 2 + (14 - 7) * 3.5 + (30 - 14) * 4 + (overdue_days - 30) * 5
 
+    #check if it is overdue based on the current date
     def is_overdue(self, current_date):
         for book in self.books:
             if datetime.strptime(book.due_date, "%d/%m/%Y") < current_date:
                 return True
         return False
-
+    
+#library system
 class LibrarySystem:
+    #init customers as arrays
     def __init__(self):
         self.customers = []
-
+    #add customer
     def add_customer(self, customer):
         self.customers.append(customer)
-
+    #edit customer based on customer id
     def edit_customer(self, customer_id, new_customer):
         for i, customer in enumerate(self.customers):
             if customer.customer_id == customer_id:
                 self.customers[i] = new_customer
                 return True
         return False
-
+    #list of all customers
     def list_customers(self):
         for customer in self.customers:
             customer.calculate_penalty(datetime.now())
             print(f"ID: {customer.customer_id} | Name: {customer.name} | Address: {customer.address} | Contact No: {customer.contact_no} | Penalty Amount: RM {customer.penalty_amount}")
             for book in customer.books:
                 print(f"  Book Name: {book.book_name} | Author: {book.author} | Rental Date: {book.rental_date} | Due Date: {book.due_date}")
-
+    #list of all customers with overdue
     def list_overdue_customers(self):
         current_date = datetime.now()
         for customer in self.customers:
@@ -78,6 +89,7 @@ class LibrarySystem:
                     if datetime.strptime(book.due_date, "%d/%m/%Y") < current_date:
                         print(f"  ! Overdue ! Book Name: {book.book_name} | Author: {book.author} | Rental Date: {book.rental_date} | Due Date: {book.due_date}")
 
+#main for input
 def main():
     library = LibrarySystem()
 
